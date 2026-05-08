@@ -1,0 +1,958 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width,initial-scale=1" />
+<title>Aaron Johal · PM Builder Portfolio</title>
+<style>
+  html, body { margin: 0; padding: 0; }
+  body {
+    font-family: 'JetBrains Mono', 'SF Mono', 'Menlo', 'Consolas', monospace;
+    -webkit-font-smoothing: antialiased; -moz-osx-font-smoothing: grayscale;
+    transition: background-color .25s, color .25s;
+  }
+  *::selection { background: rgba(166,226,46,0.25); }
+  a { text-decoration: none; }
+  a:hover { text-decoration: underline; text-underline-offset: 3px; }
+  ::-webkit-scrollbar { width: 10px; height: 10px; }
+  ::-webkit-scrollbar-track { background: transparent; }
+  ::-webkit-scrollbar-thumb { background: rgba(255,255,255,.08); border-radius: 5px; }
+  ::-webkit-scrollbar-thumb:hover { background: rgba(255,255,255,.16); }
+  html { scroll-behavior: smooth; scroll-padding-top: 80px; }
+  @media (max-width: 760px) {
+    .twocol { grid-template-columns: 1fr !important; }
+  }
+</style>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;500;600;700&display=swap" rel="stylesheet">
+</head>
+<body>
+<div id="root"></div>
+
+<script src="https://unpkg.com/react@18.3.1/umd/react.development.js" crossorigin="anonymous"></script>
+<script src="https://unpkg.com/react-dom@18.3.1/umd/react-dom.development.js" crossorigin="anonymous"></script>
+<script src="https://unpkg.com/@babel/standalone@7.29.0/babel.min.js" crossorigin="anonymous"></script>
+
+<script type="text/babel" data-presets="react">
+
+// ─── DATA ────────────────────────────────────────────────────────────────────
+
+const PORTFOLIO = {
+  name: "Aaron Johal",
+  tagline: "Senior PM building real AI products for personal and business use.",
+  lastUpdated: "21 Jan 25",
+  links: {
+    linkedin: "https://www.linkedin.com/in/aaronjohal/",
+    github: "https://github.com/aaronjohal",
+    email: "mailto:hello@aaronjohal.com",
+  },
+  about: {
+    blurb: [
+      "I've been building digital products since 2014 — starting as an engineer, which is still how I think. I moved into product because I was more interested in which problems were worth solving than in how to solve them. That combination feels more relevant now than it ever has.",
+    ],
+    companies: ["BBC", "ASOS", "Ocado Group", "Yoto"],
+  },
+  projects: [
+    {
+      id: "01_inbox_triage",
+      category: "personal",
+      file: "01_inbox_triage.py",
+      title: "Inbox Triage Agent",
+      tagline: "Reads my email like a chief of staff would.",
+      status: "shipped",
+      stack: ["GPT-4o", "Gmail API", "Python", "Cron"],
+      role: "PM + builder",
+      problem: "I was losing 90 minutes a day to email. Most of it didn't need me — it needed a decision and a draft reply.",
+      approach: [
+        "Wrote a one-page spec describing what a 'good triage' looks like for me, by category.",
+        "Built a classifier that buckets mail into Reply, Read, Defer, Trash with reasoning.",
+        "Layered on a draft-writer that mimics my voice from 18 months of sent mail.",
+        "Daily 8am digest in Slack — one tap to send the drafts.",
+      ],
+      outcome: [
+        "Time spent on email dropped ~63% over 4 weeks.",
+        "Draft acceptance rate hovers around 71%.",
+        "Stopped checking email between meetings entirely.",
+      ],
+      learned: "Most email isn't 'communication' — it's status updates that should have been a dashboard. The agent surfaced this much faster than any process change would have.",
+      github: "https://github.com/aaronjohal/inbox-triage",
+      visual: "terminal",
+    },
+    {
+      id: "02_meeting_notes",
+      category: "professional",
+      file: "02_meeting_notes.ts",
+      title: "Meeting Notes → Action Items",
+      tagline: "Whisper + LLM that ships me a TODO before I leave the room.",
+      status: "shipped",
+      stack: ["Whisper", "Claude", "TypeScript", "Raycast"],
+      role: "PM + builder",
+      problem: "Notes were either too granular (transcript) or too vague (3 bullets). I wanted action items with owners and dates, attached to the actual quote.",
+      approach: [
+        "Captured audio locally via Raycast extension; transcribed with whisper.cpp.",
+        "Designed an LLM pipeline: transcript → decisions → action items → owner inference.",
+        "Added a 'why' field that links each action back to the moment in the call.",
+      ],
+      outcome: [
+        "Used in 200+ meetings across 3 quarters.",
+        "Adopted by my team after they saw the output once.",
+        "Killed our 'notes-taker rotation' chore overnight.",
+      ],
+      learned: "Owner inference is the magic. Without it, you have a transcript with bullet points. With it, you have a meeting-ending artifact that ships.",
+      github: "https://github.com/aaronjohal/meeting-notes",
+      visual: "transcript",
+    },
+    {
+      id: "03_spec_writer",
+      category: "professional",
+      file: "03_spec_writer.md",
+      title: "Spec Writer Copilot",
+      tagline: "From half-baked idea to v1 PRD in ~12 minutes.",
+      status: "shipped",
+      stack: ["Claude", "Next.js", "Vercel", "Linear API"],
+      role: "PM + builder",
+      problem: "Writing a PRD from a fuzzy thought was the slowest, lowest-leverage part of my week. The bottleneck was 'getting unstuck,' not writing.",
+      approach: [
+        "Designed a structured interview flow: problem → users → constraints → success.",
+        "Each answer streams into a living spec on the right.",
+        "Final pass surfaces missing sections with a 'PM smell' check (vague metrics, missing edge cases, etc.).",
+      ],
+      outcome: [
+        "Used by ~40 PMs at my company.",
+        "Median PRD time-to-first-draft: 47 min → 12 min.",
+        "Promoted to internal tool.",
+      ],
+      learned: "PMs don't want a spec generator — they want a thinking partner that won't let them be lazy. The 'smell' check did more for quality than the generator did for speed.",
+      github: "https://github.com/aaronjohal/spec-writer",
+      visual: "spec",
+    },
+    {
+      id: "04_dad_jokes",
+      category: "personal",
+      file: "04_dad_jokes.js",
+      title: "Personalized Dad-Joke API for my Kids",
+      tagline: "A side quest. Surprisingly hard. Surprisingly worth it.",
+      status: "shipped",
+      stack: ["GPT-4o-mini", "Cloudflare Workers", "iMessage shortcut"],
+      role: "PM + dad",
+      problem: "My 7yo loves dad jokes. I had run out. The internet's repository is — surprisingly — bad.",
+      approach: [
+        "Fine-tuned a small model on a curated set of 600 'actually good for a 7yo' jokes.",
+        "Built an iMessage shortcut: he texts 'joke' to a number and gets one.",
+        "Added a 'rate this joke' loop that quietly improves the model.",
+      ],
+      outcome: [
+        "1,400+ jokes delivered.",
+        "Average rating climbed from 2.8 → 4.1.",
+        "Daughter (4) now also uses it. Demands knock-knock jokes only.",
+      ],
+      learned: "Building for a real, demanding user-of-one teaches more than any sprint planning. He didn't care about the architecture; he cared whether the joke landed.",
+      github: "https://github.com/aaronjohal/dad-jokes",
+      visual: "imessage",
+    },
+    {
+      id: "05_research_synth",
+      category: "professional",
+      file: "05_research_synth.py",
+      title: "Customer Research Synthesizer",
+      tagline: "30 interviews → patterns → quotes → themes — in an afternoon.",
+      status: "shipped",
+      stack: ["Claude", "Pinecone", "Streamlit"],
+      role: "PM + builder",
+      problem: "Synthesizing 30 customer interviews used to take me a full week. Half of that week was just remembering which person said what.",
+      approach: [
+        "Each transcript is chunked, embedded, and tagged with persona + context.",
+        "An LLM pass extracts claims with confidence + source quotes.",
+        "Theme clustering with manual override — the PM stays in the loop.",
+      ],
+      outcome: [
+        "Synthesis time: 5 days → 4 hours.",
+        "Adopted by 2 sister product teams.",
+        "We started doing more interviews because the cost dropped.",
+      ],
+      learned: "The model is good at extraction, terrible at judgment. Keep PMs in the theming step. The leverage compounds when synthesis stops being the bottleneck — you do more research, not less.",
+      github: "https://github.com/aaronjohal/research-synth",
+      visual: "themes",
+    },
+    {
+      id: "06_changelog_bot",
+      category: "professional",
+      file: "06_changelog_bot.go",
+      title: "Auto-Changelog from Commits",
+      tagline: "Engineering ships, customers hear about it.",
+      status: "shipped",
+      stack: ["Go", "GitHub Webhooks", "Claude", "Notion API"],
+      role: "PM + builder",
+      problem: "We shipped a lot, but external changelog updates lagged by weeks. Engineers hated writing them; I hated chasing.",
+      approach: [
+        "Listen to merged PRs on main.",
+        "Group by feature using semantic clustering.",
+        "Draft a customer-facing entry per cluster, in our voice. Route to me for sign-off.",
+      ],
+      outcome: [
+        "Changelog cadence: 'whenever' → weekly, automatically.",
+        "Engineering complaints about changelog work: → 0.",
+      ],
+      learned: "The hard part wasn't generation — it was tone. Took 6 prompt iterations to stop sounding like a robot reading a release notes file. Voice is a product surface.",
+      github: "https://github.com/aaronjohal/changelog-bot",
+      visual: "changelog",
+    },
+    {
+      id: "07_familygpt",
+      category: "personal",
+      file: "07_familygpt.tsx",
+      title: "FamilyGPT (Recipes, Schedules, Sanity)",
+      tagline: "A household assistant my wife actually uses. The bar.",
+      status: "in_progress",
+      stack: ["Claude", "Supabase", "React Native"],
+      role: "PM + builder + spouse",
+      problem: "Our shared cognitive load (meals, kid schedules, vet appointments) lived in 4 apps and 1 spouse's head. The spouse was getting tired.",
+      approach: [
+        "Single chat surface that reads our shared calendar + recipe library + grocery state.",
+        "Speaks in 'we' voice. Suggests, doesn't decide.",
+        "Has memory — knows the kids' allergies, the dog's medication, what we already ate this week.",
+      ],
+      outcome: [
+        "Wife uses it daily. (This is the metric.)",
+        "Reduced my mental tax for meal-planning to roughly zero.",
+        "Caught one missed dentist appointment. Worth the build.",
+      ],
+      learned: "Personal AI is harder than product AI. The bar for 'do not annoy me' is unforgiving. Trust takes weeks; one bad recommendation breaks it.",
+      github: "https://github.com/aaronjohal/familygpt",
+      visual: "chat",
+    },
+    {
+      id: "08_pm_dashboard",
+      category: "professional",
+      file: "08_pm_dashboard.html",
+      title: "PM Health Dashboard",
+      tagline: "The metrics every PM should look at, in one place.",
+      status: "in_progress",
+      stack: ["Claude", "Mixpanel", "Linear", "Looker"],
+      role: "PM + builder",
+      problem: "I had 6 dashboards open every Monday. None of them told me the one thing I needed: is the product getting better, or am I just shipping stuff?",
+      approach: [
+        "Defined 5 health metrics (activation, retention, NPS, time-to-value, support load).",
+        "LLM weekly summary: 'here's what changed, here's what to look at.'",
+        "Anomaly detection — but with prose, not red squiggles.",
+      ],
+      outcome: [
+        "Personal: 6 dashboards → 1.",
+        "Beta: 4 PMs using it; one reported it 'changed how I run my Mondays.'",
+      ],
+      learned: "Dashboards don't lack data — they lack narrative. A weekly 2-paragraph summary with 3 callouts beat a dashboard with 27 charts. By a lot.",
+      github: "https://github.com/aaronjohal/pm-dashboard",
+      visual: "dashboard",
+    },
+  ],
+  skills: {
+    Discovery: ["User interviews", "Jobs-to-be-Done", "Survey design", "Diary studies"],
+    Definition: ["PRDs that are read", "Opportunity sizing", "Strategy memos", "Pre-mortems"],
+    Delivery: ["Sprint planning", "Roadmapping", "Async-first ops", "Risk burndowns"],
+    Data: ["SQL", "Mixpanel / Amplitude", "Cohort analysis", "Causal inference (lite)"],
+    AI_specific: ["Prompt engineering", "Eval design", "RAG architecture", "Model selection"],
+    Building: ["Python", "TypeScript", "React", "Next.js", "Cursor", "Replit"],
+    Design: ["Figma", "Wireframing", "Prototyping in code", "Design crits"],
+    Comms: ["Exec narratives", "Customer letters", "Postmortems", "Town halls"],
+  },
+  process: [
+    { step: "01", name: "Smell the problem", note: "Ten conversations before one slide." },
+    { step: "02", name: "Write the press release", note: "If I can't write it, I don't understand it yet." },
+    { step: "03", name: "Build the jankiest version", note: "If a 4-hour prototype works, I trust it more than a 4-week roadmap." },
+    { step: "04", name: "Put it in front of one user", note: "One real user beats six imagined ones." },
+    { step: "05", name: "Decide: kill, fix, ship", note: "Killing is a feature." },
+    { step: "06", name: "Ship a small slice", note: "If it can't be shipped in two weeks, it's not a slice." },
+    { step: "07", name: "Watch the data + the faces", note: "Numbers tell you what. Faces tell you why." },
+    { step: "08", name: "Write down what I learned", note: "Public if I can. Private if I must." },
+  ],
+  reading: [
+    { title: "Inspired", author: "Marty Cagan", note: "The basics. Re-read every 18 months." },
+    { title: "The Hard Thing About Hard Things", author: "Ben Horowitz", note: "For the days that are hard." },
+    { title: "Working Backwards", author: "Bryar & Carr", note: "Where I stole the press-release-first habit." },
+    { title: "High Output Management", author: "Andy Grove", note: "The OG operating manual." },
+    { title: "The Mom Test", author: "Rob Fitzpatrick", note: "If you only read one customer-research book." },
+    { title: "Lenny's Newsletter", author: "Lenny Rachitsky", note: "Where I steal frameworks." },
+    { title: "Stratechery", author: "Ben Thompson", note: "For thinking in systems." },
+    { title: "Every", author: "Various", note: "AI-product writing, mostly." },
+  ],
+};
+
+// ─── THEME ───────────────────────────────────────────────────────────────────
+
+const theme = {
+  bg: "#1e1f1c",
+  bgDeep: "#181915",
+  panel: "#272822",
+  panelHi: "#33342d",
+  border: "rgba(255,255,255,0.08)",
+  borderStrong: "rgba(255,255,255,0.14)",
+  text: "#f8f8f2",
+  dim: "#9c9988",
+  dimmer: "#6d6a5c",
+  pink:   "#f92672",
+  green:  "#a6e22e",
+  cyan:   "#66d9ef",
+  purple: "#ae81ff",
+  yellow: "#e6db74",
+  orange: "#fd971f",
+};
+
+// ─── HELPERS ─────────────────────────────────────────────────────────────────
+
+const Tok = ({ c, children }) => (
+  <span style={{ color: c }}>{children}</span>
+);
+
+const extColor = (ext) => ({
+  py: theme.green, ts: theme.cyan, tsx: theme.cyan, js: theme.yellow,
+  go: theme.cyan, html: theme.pink, md: theme.cyan, json: theme.yellow,
+  yaml: theme.orange, txt: theme.text, pdf: theme.purple,
+}[ext] || theme.dim);
+
+// ─── TOP NAV ─────────────────────────────────────────────────────────────────
+
+function TopNav({ onJump }) {
+  const items = [
+    { id: 'work',    label: 'projects', c: theme.green  },
+    { id: 'about',   label: 'me',       c: theme.cyan   },
+    { id: 'process', label: 'thinking', c: theme.purple },
+    { id: 'contact', label: 'contact',  c: theme.pink   },
+  ];
+  return (
+    <header style={{
+      position: 'sticky', top: 0, zIndex: 50,
+      background: theme.bgDeep + 'ee',
+      backdropFilter: 'blur(12px)',
+      borderBottom: `1px solid ${theme.border}`,
+    }}>
+      <div style={{
+        maxWidth: 1240, margin: '0 auto',
+        padding: '14px 32px',
+        display: 'flex', alignItems: 'center', gap: 24,
+        fontSize: 13,
+      }}>
+        <a href="#top"
+           onClick={(e) => { e.preventDefault(); window.scrollTo({ top: 0, behavior: 'smooth' }); }}
+           style={{ display: 'flex', alignItems: 'center', gap: 10, textDecoration: 'none', color: theme.text }}>
+          <span style={{ display: 'flex', gap: 5 }}>
+            <span style={{ width: 11, height: 11, borderRadius: 6, background: '#ff5f56', display: 'block' }} />
+            <span style={{ width: 11, height: 11, borderRadius: 6, background: '#ffbd2e', display: 'block' }} />
+            <span style={{ width: 11, height: 11, borderRadius: 6, background: '#27c93f', display: 'block' }} />
+          </span>
+          <span style={{ fontWeight: 600, letterSpacing: '-0.01em' }}>
+            <span style={{ color: theme.dim }}>~/</span>aaron-johal
+          </span>
+        </a>
+        <nav style={{ display: 'flex', gap: 22, marginLeft: 16, flex: 1, flexWrap: 'wrap' }}>
+          {items.map((it) => (
+            <a key={it.id} href={`#${it.id}`}
+               onClick={(e) => { e.preventDefault(); onJump(it.id); }}
+               style={{ color: theme.dim, textDecoration: 'none', display: 'flex', alignItems: 'center', gap: 7 }}
+               onMouseEnter={(e) => (e.currentTarget.style.color = theme.text)}
+               onMouseLeave={(e) => (e.currentTarget.style.color = theme.dim)}
+            >
+              <span style={{ width: 6, height: 6, borderRadius: 3, background: it.c, display: 'block' }} />
+              {it.label}
+            </a>
+          ))}
+        </nav>
+        <a href={PORTFOLIO.links.linkedin} target="_blank" rel="noreferrer"
+           style={{ color: theme.dim, fontSize: 12 }}>linkedin ↗</a>
+        <a href={PORTFOLIO.links.github} target="_blank" rel="noreferrer"
+           style={{ color: theme.dim, fontSize: 12 }}>github ↗</a>
+      </div>
+    </header>
+  );
+}
+
+// ─── HERO ─────────────────────────────────────────────────────────────────────
+
+function Hero() {
+  return (
+    <section id="top" style={{ maxWidth: 1240, margin: '0 auto', padding: '88px 32px 56px' }}>
+      <div style={{
+        display: 'flex', alignItems: 'center', gap: 8,
+        color: theme.dim, fontSize: 12, marginBottom: 28,
+      }}>
+        <span style={{ width: 7, height: 7, borderRadius: 4, background: theme.green, display: 'block' }} />
+        <span>~/aaron-johal</span>
+        <span style={{ color: theme.dimmer }}>/</span>
+        <span>readme.md</span>
+        <span style={{ marginLeft: 'auto', color: theme.dimmer }}>last updated · {PORTFOLIO.lastUpdated}</span>
+      </div>
+
+      <div style={{ color: theme.dim, fontSize: 14, marginBottom: 14 }}>
+        <span style={{ color: theme.pink }}>const </span>
+        <span style={{ color: theme.cyan }}>aaron</span>
+        <span style={{ color: theme.text }}> = {'{'}</span>
+      </div>
+
+      <h1 style={{
+        fontSize: 'clamp(40px, 6vw, 78px)', fontWeight: 700,
+        lineHeight: 1.02, letterSpacing: '-0.025em',
+        margin: 0, color: theme.text,
+      }}>
+        Hi, I'm <span style={{ color: theme.green }}>Aaron</span>.<br />
+        I'm a Senior PM<br />
+        who <span style={{ color: theme.yellow }}>builds</span> the things he ships.
+      </h1>
+
+      <p style={{
+        fontSize: 18, lineHeight: 1.55, color: theme.dim,
+        maxWidth: 620, marginTop: 24, marginBottom: 0,
+      }}>
+        {PORTFOLIO.tagline} I treat product management like an engineering discipline —
+        write the spec, ship the prototype, measure, iterate.{' '}
+        <span style={{ color: theme.text }}>The fastest way to know if a thing should exist is to build a janky version and use it.</span>
+      </p>
+
+      <div style={{ marginTop: 32, display: 'flex', gap: 12, flexWrap: 'wrap' }}>
+        <a href="#work"
+           onClick={(e) => { e.preventDefault(); document.getElementById('work').scrollIntoView({ behavior: 'smooth' }); }}
+           style={{
+             background: theme.green, color: theme.bg,
+             padding: '12px 22px', textDecoration: 'none',
+             fontSize: 14, fontWeight: 600, borderRadius: 6,
+             display: 'inline-flex', alignItems: 'center', gap: 8,
+           }}>
+          <span>./view-projects.sh</span><span>→</span>
+        </a>
+        <a href={PORTFOLIO.links.linkedin} target="_blank" rel="noreferrer"
+           style={{
+             border: `1px solid ${theme.borderStrong}`, color: theme.text,
+             padding: '12px 22px', textDecoration: 'none',
+             fontSize: 14, fontWeight: 500, borderRadius: 6,
+           }}>linkedin ↗</a>
+        <a href={PORTFOLIO.links.github} target="_blank" rel="noreferrer"
+           style={{
+             border: `1px solid ${theme.borderStrong}`, color: theme.text,
+             padding: '12px 22px', textDecoration: 'none',
+             fontSize: 14, fontWeight: 500, borderRadius: 6,
+           }}>github ↗</a>
+      </div>
+
+      <div style={{ marginTop: 40, color: theme.dim, fontSize: 14 }}>
+        <span style={{ color: theme.text }}>{'}'}</span>;
+      </div>
+    </section>
+  );
+}
+
+// ─── SECTION HEADER ───────────────────────────────────────────────────────────
+
+function SectionHeader({ kicker, title, subtitle, accent, file }) {
+  return (
+    <div style={{ marginBottom: 36 }}>
+      <div style={{ display: 'flex', alignItems: 'center', gap: 10, color: theme.dim, fontSize: 12, marginBottom: 14 }}>
+        <span style={{ width: 7, height: 7, borderRadius: 4, background: accent, display: 'block' }} />
+        <span>{kicker}</span>
+        {file && <><span style={{ color: theme.dimmer }}>/</span><span>{file}</span></>}
+      </div>
+      <h2 style={{
+        margin: 0, fontSize: 'clamp(28px, 3.5vw, 44px)',
+        fontWeight: 700, color: theme.text, letterSpacing: '-0.02em', lineHeight: 1.05,
+      }}>{title}</h2>
+      {subtitle && (
+        <p style={{ color: theme.dim, fontSize: 17, lineHeight: 1.5, maxWidth: 720, marginTop: 14, marginBottom: 0 }}>
+          {subtitle}
+        </p>
+      )}
+    </div>
+  );
+}
+
+// ─── STATUS PILL ──────────────────────────────────────────────────────────────
+
+function StatusPill({ status }) {
+  const map = {
+    shipped:     { c: theme.green,  l: 'shipped' },
+    in_progress: { c: theme.orange, l: 'in progress' },
+    archived:    { c: theme.dim,    l: 'archived' },
+  };
+  const s = map[status] || map.archived;
+  return (
+    <span style={{
+      display: 'inline-flex', alignItems: 'center', gap: 6,
+      fontSize: 11, color: s.c, background: s.c + '18',
+      padding: '3px 9px', borderRadius: 999, fontWeight: 500, letterSpacing: '.02em',
+    }}>
+      <span style={{ width: 6, height: 6, borderRadius: 3, background: s.c, display: 'block' }} />
+      {s.l}
+    </span>
+  );
+}
+
+// ─── PROJECT CAROUSEL ─────────────────────────────────────────────────────────
+
+function ProjectCarousel({ project, dot }) {
+  const [idx, setIdx] = React.useState(0);
+  const slides = ['Overview', 'Key flow', 'Detail view', 'Result'];
+  const n = slides.length;
+  const go = (delta) => setIdx((i) => (i + delta + n) % n);
+
+  React.useEffect(() => {
+    const onKey = (e) => {
+      if (e.key === 'ArrowLeft') go(-1);
+      if (e.key === 'ArrowRight') go(1);
+    };
+    window.addEventListener('keydown', onKey);
+    return () => window.removeEventListener('keydown', onKey);
+  }, []);
+
+  const stripeBg = `repeating-linear-gradient(135deg, ${theme.bgDeep} 0 18px, ${theme.panel} 18px 36px)`;
+
+  return (
+    <div style={{ marginTop: 28, border: `1px solid ${theme.border}`, borderRadius: 8, overflow: 'hidden' }}>
+      <div style={{ position: 'relative', height: 360, overflow: 'hidden' }}>
+        <div style={{
+          display: 'flex', height: '100%',
+          width: `${n * 100}%`,
+          transform: `translateX(-${idx * (100 / n)}%)`,
+          transition: 'transform .45s cubic-bezier(.4,.0,.2,1)',
+        }}>
+          {slides.map((label, i) => (
+            <div key={i} style={{
+              width: `${100 / n}%`, height: '100%',
+              background: stripeBg, position: 'relative',
+              display: 'flex', alignItems: 'center', justifyContent: 'center',
+            }}>
+              <div style={{ position: 'absolute', inset: 24, border: `1px dashed ${theme.borderStrong}`, borderRadius: 6, pointerEvents: 'none' }} />
+              <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', gap: 10, textAlign: 'center', padding: '0 24px' }}>
+                <span style={{ width: 44, height: 44, borderRadius: 22, background: dot, display: 'flex', alignItems: 'center', justifyContent: 'center', color: theme.bg, fontSize: 22, fontWeight: 700 }}>↗</span>
+                <div style={{ fontSize: 11, letterSpacing: '.18em', textTransform: 'uppercase', color: theme.dim, fontWeight: 600 }}>product screenshot</div>
+                <div style={{ fontSize: 18, color: theme.text, fontWeight: 500 }}>{label}</div>
+                <div style={{ fontSize: 12, color: theme.dimmer }}>{project.file} — frame {String(i + 1).padStart(2, '0')} / {String(n).padStart(2, '0')}</div>
+              </div>
+            </div>
+          ))}
+        </div>
+        {['left', 'right'].map((side) => (
+          <button key={side} aria-label={side === 'left' ? 'Previous' : 'Next'} onClick={() => go(side === 'left' ? -1 : 1)} style={{
+            position: 'absolute', top: '50%', [side]: 12, transform: 'translateY(-50%)',
+            width: 38, height: 38, borderRadius: 19,
+            background: 'rgba(0,0,0,.5)', backdropFilter: 'blur(6px)',
+            border: `1px solid ${theme.borderStrong}`, color: theme.text,
+            fontSize: 22, display: 'flex', alignItems: 'center', justifyContent: 'center',
+            cursor: 'pointer', userSelect: 'none',
+          }}>{side === 'left' ? '‹' : '›'}</button>
+        ))}
+      </div>
+      <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', padding: '10px 16px', borderTop: `1px solid ${theme.border}`, background: theme.panel }}>
+        <span style={{ fontSize: 12, color: theme.dim }}>{String(idx + 1).padStart(2, '0')} / {String(n).padStart(2, '0')}</span>
+        <div style={{ display: 'flex', gap: 6 }}>
+          {slides.map((_, i) => (
+            <button key={i} onClick={() => setIdx(i)} style={{
+              width: i === idx ? 22 : 8, height: 8, borderRadius: 4,
+              border: 'none', padding: 0, cursor: 'pointer',
+              background: i === idx ? dot : theme.border, transition: 'all .25s',
+            }} />
+          ))}
+        </div>
+        <span style={{ fontSize: 11, color: theme.dimmer }}>← → to navigate</span>
+      </div>
+    </div>
+  );
+}
+
+// ─── CARD PREVIEW ─────────────────────────────────────────────────────────────
+
+function CardPreview({ project }) {
+  const tints = {
+    terminal: theme.green, transcript: theme.cyan, spec: theme.purple,
+    imessage: theme.yellow, themes: theme.pink, changelog: theme.orange,
+    chat: theme.cyan, dashboard: theme.green,
+  };
+  const c = tints[project.visual] || theme.dim;
+  const stripeBg = `repeating-linear-gradient(135deg, ${theme.bgDeep} 0 14px, ${theme.panel} 14px 28px)`;
+  return (
+    <div style={{ position: 'relative', height: 156, background: stripeBg, borderBottom: `1px solid ${theme.border}`, overflow: 'hidden', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
+      <div style={{ position: 'absolute', inset: 14, border: `1px dashed ${theme.borderStrong}`, borderRadius: 4, pointerEvents: 'none' }} />
+      <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', gap: 6, textAlign: 'center', padding: '0 12px' }}>
+        <span style={{ width: 26, height: 26, borderRadius: 13, background: c, display: 'flex', alignItems: 'center', justifyContent: 'center', color: theme.bg, fontSize: 14, fontWeight: 700 }}>↗</span>
+        <div style={{ fontSize: 10, letterSpacing: '.14em', textTransform: 'uppercase', color: theme.dim, fontWeight: 600 }}>product screenshot</div>
+        <div style={{ fontSize: 11, color: theme.dimmer }}>{project.file}</div>
+      </div>
+    </div>
+  );
+}
+
+// ─── PROJECT CARD ─────────────────────────────────────────────────────────────
+
+function ProjectCard({ project, onOpen }) {
+  const ext = project.file.split('.').pop();
+  const dot = extColor(ext);
+  const [hover, setHover] = React.useState(false);
+  return (
+    <article
+      onClick={() => onOpen(project.id)}
+      onMouseEnter={() => setHover(true)}
+      onMouseLeave={() => setHover(false)}
+      style={{
+        background: theme.panel, border: `1px solid ${hover ? theme.borderStrong : theme.border}`,
+        borderRadius: 8, overflow: 'hidden', cursor: 'pointer',
+        transition: 'transform .2s ease, border-color .15s, box-shadow .2s',
+        transform: hover ? 'translateY(-2px)' : 'none',
+        boxShadow: hover ? '0 16px 40px rgba(0,0,0,.25)' : 'none',
+        display: 'flex', flexDirection: 'column',
+      }}>
+      <CardPreview project={project} />
+      <div style={{ padding: 18, display: 'flex', flexDirection: 'column', gap: 10, flex: 1 }}>
+        <div style={{ display: 'flex', alignItems: 'center', gap: 10 }}>
+          <span style={{ display: 'inline-flex', alignItems: 'center', gap: 6, color: theme.dim, fontSize: 12 }}>
+            <span style={{ width: 6, height: 6, borderRadius: 3, background: dot, display: 'block' }} />
+            {project.file}
+          </span>
+          <span style={{ marginLeft: 'auto' }}><StatusPill status={project.status} /></span>
+        </div>
+        <h3 style={{ margin: 0, fontSize: 19, fontWeight: 600, color: theme.text, letterSpacing: '-0.01em', lineHeight: 1.2 }}>{project.title}</h3>
+        <p style={{ margin: 0, fontSize: 14, color: theme.dim, lineHeight: 1.5 }}>{project.tagline}</p>
+        <div style={{ display: 'flex', flexWrap: 'wrap', gap: 6, marginTop: 'auto', paddingTop: 6 }}>
+          {project.stack.slice(0, 4).map((s) => (
+            <span key={s} style={{ fontSize: 10, color: theme.dim, background: theme.bgDeep, border: `1px solid ${theme.border}`, padding: '2px 7px', borderRadius: 4 }}>{s}</span>
+          ))}
+          {project.stack.length > 4 && <span style={{ fontSize: 10, color: theme.dimmer, padding: '2px 0' }}>+{project.stack.length - 4}</span>}
+        </div>
+        <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginTop: 6, paddingTop: 12, borderTop: `1px solid ${theme.border}`, fontSize: 12 }}>
+          <span style={{ color: hover ? theme.green : theme.dim, transition: 'color .15s' }}>read case study →</span>
+          <a href={project.github} target="_blank" rel="noreferrer" onClick={(e) => e.stopPropagation()} style={{ color: theme.dim, textDecoration: 'none' }}>github ↗</a>
+        </div>
+      </div>
+    </article>
+  );
+}
+
+// ─── PROJECT DETAIL MODAL ─────────────────────────────────────────────────────
+
+function ProjectDetail({ project, onClose }) {
+  React.useEffect(() => {
+    const k = (e) => { if (e.key === 'Escape') onClose(); };
+    document.addEventListener('keydown', k);
+    document.body.style.overflow = 'hidden';
+    return () => { document.removeEventListener('keydown', k); document.body.style.overflow = ''; };
+  }, [onClose]);
+
+  if (!project) return null;
+  const ext = project.file.split('.').pop();
+  const dot = extColor(ext);
+
+  const Section = ({ kicker, c, children }) => (
+    <div style={{ marginTop: 32 }}>
+      <div style={{ display: 'flex', alignItems: 'center', gap: 8, color: c, fontSize: 12, marginBottom: 12, letterSpacing: '.04em', textTransform: 'uppercase', fontWeight: 600 }}>
+        <span style={{ width: 6, height: 6, borderRadius: 3, background: c, display: 'block' }} />
+        {kicker}
+      </div>
+      {children}
+    </div>
+  );
+
+  return ReactDOM.createPortal(
+    <div onClick={onClose} style={{ position: 'fixed', inset: 0, zIndex: 100, background: 'rgba(0,0,0,.65)', backdropFilter: 'blur(8px)', display: 'flex', alignItems: 'flex-start', justifyContent: 'center', padding: '60px 20px', overflowY: 'auto' }}>
+      <div onClick={(e) => e.stopPropagation()} style={{ width: '100%', maxWidth: 880, background: theme.panel, border: `1px solid ${theme.borderStrong}`, borderRadius: 10, color: theme.text, boxShadow: '0 24px 80px rgba(0,0,0,.5)' }}>
+        <div style={{ display: 'flex', alignItems: 'center', gap: 10, padding: '14px 22px', borderBottom: `1px solid ${theme.border}`, background: theme.bgDeep, borderTopLeftRadius: 10, borderTopRightRadius: 10 }}>
+          <span style={{ display: 'flex', gap: 5 }}>
+            <span style={{ width: 10, height: 10, borderRadius: 5, background: '#ff5f56', cursor: 'pointer', display: 'block' }} onClick={onClose} />
+            <span style={{ width: 10, height: 10, borderRadius: 5, background: '#ffbd2e', display: 'block' }} />
+            <span style={{ width: 10, height: 10, borderRadius: 5, background: '#27c93f', display: 'block' }} />
+          </span>
+          <span style={{ display: 'inline-flex', alignItems: 'center', gap: 6, color: theme.dim, fontSize: 13, marginLeft: 8 }}>
+            <span style={{ width: 7, height: 7, borderRadius: 4, background: dot, display: 'block' }} />
+            {project.file}
+          </span>
+          <span style={{ marginLeft: 'auto' }}><StatusPill status={project.status} /></span>
+          <button onClick={onClose} style={{ background: 'transparent', border: 'none', color: theme.dim, fontSize: 18, cursor: 'pointer', padding: '0 4px', lineHeight: 1 }}>×</button>
+        </div>
+        <div style={{ padding: '32px 36px 40px' }}>
+          <h2 style={{ margin: 0, fontSize: 36, fontWeight: 700, letterSpacing: '-0.02em', lineHeight: 1.1 }}>{project.title}</h2>
+          <p style={{ margin: '12px 0 0', color: theme.dim, fontSize: 18, lineHeight: 1.5 }}>{project.tagline}</p>
+          <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(160px,1fr))', gap: 12, marginTop: 24, padding: '16px 18px', background: theme.bgDeep, border: `1px solid ${theme.border}`, borderRadius: 6 }}>
+            {[['role', project.role], ['stack', project.stack.join(' · ')], ['status', project.status.replace('_', ' ')]].map(([k, v]) => (
+              <div key={k}>
+                <div style={{ fontSize: 10, color: theme.dimmer, letterSpacing: '.06em', textTransform: 'uppercase' }}>{k}</div>
+                <div style={{ fontSize: 14, marginTop: 2, color: k === 'stack' ? theme.dim : theme.text }}>{v}</div>
+              </div>
+            ))}
+          </div>
+          <ProjectCarousel project={project} dot={dot} />
+          <Section kicker="The problem" c={theme.pink}>
+            <p style={{ margin: 0, fontSize: 16, lineHeight: 1.65 }}>{project.problem}</p>
+          </Section>
+          <Section kicker="My approach" c={theme.cyan}>
+            <ol style={{ margin: 0, padding: 0, listStyle: 'none' }}>
+              {project.approach.map((a, i) => (
+                <li key={i} style={{ display: 'flex', gap: 14, padding: '10px 0', borderBottom: i < project.approach.length - 1 ? `1px solid ${theme.border}` : 'none' }}>
+                  <span style={{ flexShrink: 0, color: theme.cyan, fontSize: 14, fontWeight: 500, minWidth: 24 }}>{String(i + 1).padStart(2, '0')}</span>
+                  <span style={{ fontSize: 15, lineHeight: 1.55 }}>{a}</span>
+                </li>
+              ))}
+            </ol>
+          </Section>
+          <Section kicker="Outcome" c={theme.green}>
+            <ul style={{ margin: 0, padding: 0, listStyle: 'none', display: 'flex', flexDirection: 'column', gap: 8 }}>
+              {project.outcome.map((o, i) => (
+                <li key={i} style={{ display: 'flex', gap: 10, fontSize: 15, lineHeight: 1.55 }}>
+                  <span style={{ color: theme.green, flexShrink: 0 }}>✓</span><span>{o}</span>
+                </li>
+              ))}
+            </ul>
+          </Section>
+          <Section kicker="What I learned" c={theme.yellow}>
+            <blockquote style={{ margin: 0, padding: '14px 18px', borderLeft: `3px solid ${theme.yellow}`, background: theme.bgDeep, fontSize: 16, lineHeight: 1.6, fontStyle: 'italic', borderRadius: '0 4px 4px 0' }}>{project.learned}</blockquote>
+          </Section>
+          <div style={{ marginTop: 36, paddingTop: 20, borderTop: `1px solid ${theme.border}`, display: 'flex', gap: 12, flexWrap: 'wrap' }}>
+            <a href={project.github} target="_blank" rel="noreferrer" style={{ background: theme.green, color: theme.bg, padding: '10px 18px', textDecoration: 'none', borderRadius: 6, fontSize: 14, fontWeight: 600, display: 'inline-flex', alignItems: 'center', gap: 8 }}>view on github ↗</a>
+            <button onClick={onClose} style={{ border: `1px solid ${theme.borderStrong}`, color: theme.text, background: 'transparent', padding: '10px 18px', borderRadius: 6, fontSize: 14, fontWeight: 500, cursor: 'pointer', fontFamily: 'inherit' }}>← back to all projects</button>
+          </div>
+        </div>
+      </div>
+    </div>,
+    document.body
+  );
+}
+
+// ─── WORK SECTION ─────────────────────────────────────────────────────────────
+
+function WorkSection() {
+  const [openId, setOpenId] = React.useState(null);
+  const [filter, setFilter] = React.useState('all');
+  const projects = PORTFOLIO.projects;
+  const open = projects.find(p => p.id === openId);
+  const pro = projects.filter(p => p.category === 'professional');
+  const personal = projects.filter(p => p.category === 'personal');
+
+  const Tab = ({ id, label, count, c }) => {
+    const active = filter === id;
+    return (
+      <button onClick={() => setFilter(id)} style={{
+        background: active ? c + '20' : 'transparent',
+        border: `1px solid ${active ? c : theme.border}`,
+        color: active ? c : theme.dim,
+        padding: '8px 14px', borderRadius: 999, cursor: 'pointer',
+        fontFamily: 'inherit', fontSize: 13, fontWeight: 500,
+        display: 'inline-flex', alignItems: 'center', gap: 8, transition: 'all .15s',
+      }}>
+        <span style={{ width: 7, height: 7, borderRadius: 4, background: c, display: 'block' }} />
+        {label}
+        <span style={{ color: theme.dimmer, fontSize: 11 }}>{count}</span>
+      </button>
+    );
+  };
+
+  const Group = ({ title, kicker, accent, items }) => (
+    <div style={{ marginTop: 36 }}>
+      <div style={{ display: 'flex', alignItems: 'baseline', gap: 12, marginBottom: 18, paddingBottom: 12, borderBottom: `1px solid ${theme.border}` }}>
+        <span style={{ width: 8, height: 8, borderRadius: 4, background: accent, display: 'block' }} />
+        <h3 style={{ margin: 0, fontSize: 20, fontWeight: 600, color: theme.text, letterSpacing: '-0.01em' }}>{title}</h3>
+        <span style={{ color: theme.dim, fontSize: 13 }}>// {kicker}</span>
+        <span style={{ marginLeft: 'auto', color: theme.dimmer, fontSize: 12 }}>{items.length} project{items.length === 1 ? '' : 's'}</span>
+      </div>
+      <div style={{ display: 'grid', gap: 20, gridTemplateColumns: 'repeat(auto-fill, minmax(320px, 1fr))' }}>
+        {items.map((p) => <ProjectCard key={p.id} project={p} onOpen={setOpenId} />)}
+      </div>
+    </div>
+  );
+
+  return (
+    <section id="work" style={{ maxWidth: 1240, margin: '0 auto', padding: '64px 32px' }}>
+      <SectionHeader kicker="~/aaron-johal" file="projects/" accent={theme.green}
+        title="Things I've built."
+        subtitle="Eight AI products I shipped — split between work-driven products and personal builds. Click any card for the full case study." />
+      <div style={{ display: 'flex', gap: 8, flexWrap: 'wrap', marginBottom: 8 }}>
+        <Tab id="all" label="all" count={projects.length} c={theme.text} />
+        <Tab id="professional" label="professional" count={pro.length} c={theme.cyan} />
+        <Tab id="personal" label="personal" count={personal.length} c={theme.yellow} />
+      </div>
+      {filter !== 'personal' && <Group title="Professional" kicker="built for work / teams / customers" accent={theme.cyan} items={pro} />}
+      {filter !== 'professional' && <Group title="Personal" kicker="built for myself / my family / fun" accent={theme.yellow} items={personal} />}
+      {open && <ProjectDetail project={open} onClose={() => setOpenId(null)} />}
+    </section>
+  );
+}
+
+// ─── ABOUT SECTION ────────────────────────────────────────────────────────────
+
+function AboutSection() {
+  const A = PORTFOLIO.about;
+  const aiSkills = PORTFOLIO.skills.AI_specific || [];
+  const logoColors = [theme.cyan, theme.pink, theme.green, theme.orange, theme.purple, theme.yellow];
+  return (
+    <section id="about" style={{ maxWidth: 1240, margin: '0 auto', padding: '64px 32px' }}>
+      <SectionHeader kicker="~/aaron-johal" file="about.json" accent={theme.cyan} title="A few things about me." />
+      <div style={{ maxWidth: 820, display: 'flex', flexDirection: 'column', gap: 36 }}>
+        {A.blurb.map((b, i) => (
+          <p key={i} style={{ margin: 0, fontSize: 17, lineHeight: 1.65, color: theme.text }}>{b}</p>
+        ))}
+        <div>
+          <div style={{ display: 'flex', flexWrap: 'wrap', gap: 12 }}>
+            {A.companies.map((c, i) => (
+              <div key={c} style={{ display: 'inline-flex', alignItems: 'center', gap: 10, padding: '10px 16px', background: theme.panel, border: `1px solid ${theme.border}`, borderRadius: 6 }}>
+                <span style={{ width: 22, height: 22, borderRadius: 4, background: logoColors[i % logoColors.length] + '22', border: `1px solid ${logoColors[i % logoColors.length]}55`, display: 'flex', alignItems: 'center', justifyContent: 'center', color: logoColors[i % logoColors.length], fontSize: 11, fontWeight: 700 }}>
+                  {c.slice(0, 1)}
+                </span>
+                <span style={{ fontSize: 14, color: theme.text, fontWeight: 500 }}>{c}</span>
+              </div>
+            ))}
+          </div>
+        </div>
+        <div style={{ background: theme.panel, border: `1px solid ${theme.border}`, borderRadius: 8, padding: '20px 22px' }}>
+          <div style={{ display: 'flex', alignItems: 'center', gap: 8, marginBottom: 14 }}>
+            <span style={{ width: 8, height: 8, borderRadius: 4, background: theme.pink, display: 'block' }} />
+            <span style={{ color: theme.text, fontSize: 15, fontWeight: 600 }}>AI specific</span>
+            <span style={{ color: theme.dim, fontSize: 12, marginLeft: 4 }}>// what I specialise in now</span>
+          </div>
+          <div style={{ display: 'flex', flexWrap: 'wrap', gap: 6 }}>
+            {aiSkills.map((it) => (
+              <span key={it} style={{ fontSize: 13, color: theme.dim, background: theme.bgDeep, border: `1px solid ${theme.border}`, padding: '5px 12px', borderRadius: 999 }}>{it}</span>
+            ))}
+          </div>
+        </div>
+      </div>
+    </section>
+  );
+}
+
+// ─── PROCESS SECTION ──────────────────────────────────────────────────────────
+
+function ProcessSection() {
+  return (
+    <section id="process" style={{ maxWidth: 1240, margin: '0 auto', padding: '64px 32px' }}>
+      <SectionHeader kicker="~/aaron-johal" file="process.md" accent={theme.purple} title="How I work." />
+      <div style={{ maxWidth: 820, display: 'flex', flexDirection: 'column', gap: 20 }}>
+        <p style={{ margin: 0, fontSize: 17, lineHeight: 1.65, color: theme.text }}>
+          I run continuous discovery as a guiding practice, influenced heavily by <span style={{ color: theme.cyan }}>Teresa Torres</span>. Shipping is how I learn, not how I celebrate. I'm comfortable in ambiguity and tend to reach for an <span style={{ color: theme.green }}>A/B test</span> before a roadmap slide.
+        </p>
+        <p style={{ margin: 0, fontSize: 17, lineHeight: 1.65, color: theme.text }}>
+          I'm an IC who's guided teams — which means I can go deep on a problem myself, or help others go deep. I'm business-focused, but the <span style={{ color: theme.pink }}>customer</span> is the check on everything.
+        </p>
+        <p style={{ margin: 0, fontSize: 17, lineHeight: 1.65, color: theme.text }}>
+          I build the tools I wish I had, mostly to eliminate the admin that pulls me away from customers. Many of the projects on this site started as <span style={{ color: theme.yellow }}>personal frustrations</span>.
+        </p>
+        <div style={{ display: 'grid', gap: 12, gridTemplateColumns: 'repeat(auto-fill, minmax(280px, 1fr))', marginTop: 8 }}>
+          {PORTFOLIO.process.map((p) => (
+            <div key={p.step} style={{ background: theme.panel, border: `1px solid ${theme.border}`, borderRadius: 8, padding: '16px 18px', display: 'flex', gap: 14, alignItems: 'flex-start' }}>
+              <span style={{ color: theme.purple, fontSize: 13, fontWeight: 600, minWidth: 24, flexShrink: 0 }}>{p.step}</span>
+              <div>
+                <div style={{ color: theme.text, fontSize: 14, fontWeight: 600, marginBottom: 4 }}>{p.name}</div>
+                <div style={{ color: theme.dim, fontSize: 12, lineHeight: 1.5 }}>// {p.note}</div>
+              </div>
+            </div>
+          ))}
+        </div>
+      </div>
+    </section>
+  );
+}
+
+// ─── CONTACT SECTION ──────────────────────────────────────────────────────────
+
+function ContactSection() {
+  const [form, setForm] = React.useState({ name: '', email: '', message: '' });
+  const [sent, setSent] = React.useState(false);
+
+  const Field = ({ as = 'input', label, field, placeholder, rows }) => {
+    const Tag = as;
+    return (
+      <label style={{ display: 'flex', flexDirection: 'column', gap: 6 }}>
+        <span style={{ color: theme.dim, fontSize: 12 }}>{label}</span>
+        <Tag value={form[field]} onChange={(e) => setForm({ ...form, [field]: e.target.value })}
+          placeholder={placeholder} rows={rows}
+          style={{ background: theme.bgDeep, border: `1px solid ${theme.border}`, color: theme.text, padding: '10px 12px', fontFamily: 'inherit', fontSize: 14, borderRadius: 5, outline: 'none', resize: 'vertical' }} />
+      </label>
+    );
+  };
+
+  return (
+    <section id="contact" style={{ maxWidth: 1240, margin: '0 auto', padding: '64px 32px 120px' }}>
+      <SectionHeader kicker="~/aaron-johal" file="contact.html" accent={theme.pink}
+        title="Say hi."
+        subtitle="Recruiting? Building something? Just curious about a project? I write back." />
+      <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: 32, alignItems: 'start' }} className="twocol">
+        <div style={{ background: theme.panel, border: `1px solid ${theme.border}`, borderRadius: 8, padding: '24px 26px', display: 'flex', flexDirection: 'column', gap: 14 }}>
+          {sent ? (
+            <div style={{ padding: '32px 16px', textAlign: 'center', border: `1px dashed ${theme.green}`, borderRadius: 6, color: theme.green, fontSize: 14 }}>
+              ✓ message queued. (this is a portfolio — please email or DM for real)
+            </div>
+          ) : (
+            <form onSubmit={(e) => { e.preventDefault(); setSent(true); }} style={{ display: 'flex', flexDirection: 'column', gap: 14 }}>
+              <Field label="your name" field="name" placeholder="Aaron J." />
+              <Field label="your email" field="email" placeholder="you@somewhere.com" />
+              <Field as="textarea" rows={5} label="message" field="message" placeholder="What's on your mind?" />
+              <button type="submit" style={{ alignSelf: 'flex-start', background: theme.pink, color: '#fff', border: 'none', padding: '10px 22px', cursor: 'pointer', fontFamily: 'inherit', fontSize: 14, fontWeight: 600, borderRadius: 6 }}>./send_message.sh →</button>
+            </form>
+          )}
+        </div>
+        <div style={{ display: 'flex', flexDirection: 'column', gap: 14 }}>
+          {[
+            { href: PORTFOLIO.links.linkedin, label: 'LinkedIn', sub: 'linkedin.com/in/aaronjohal', c: theme.cyan, target: '_blank' },
+            { href: PORTFOLIO.links.github,   label: 'GitHub',   sub: 'github.com/aaronjohal',      c: theme.green, target: '_blank' },
+            { href: PORTFOLIO.links.email,    label: 'Email',    sub: 'hello@aaronjohal.com',       c: theme.yellow },
+          ].map(({ href, label, sub, c, target }) => (
+            <a key={label} href={href} target={target} rel={target ? 'noreferrer' : undefined}
+              style={{ padding: '18px 22px', background: theme.panel, border: `1px solid ${theme.border}`, borderRadius: 8, color: theme.text, textDecoration: 'none', display: 'flex', alignItems: 'center', gap: 14 }}>
+              <span style={{ width: 10, height: 10, borderRadius: 5, background: c, display: 'block', flexShrink: 0 }} />
+              <div style={{ flex: 1 }}>
+                <div style={{ fontWeight: 600 }}>{label}</div>
+                <div style={{ color: theme.dim, fontSize: 13 }}>{sub}</div>
+              </div>
+              <span style={{ color: theme.dim }}>↗</span>
+            </a>
+          ))}
+          <a href="#" onClick={(e) => { e.preventDefault(); alert('In a real deployment this would download the PDF.'); }}
+            style={{ padding: '18px 22px', background: theme.panel, border: `1px solid ${theme.border}`, borderRadius: 8, color: theme.text, textDecoration: 'none', display: 'flex', alignItems: 'center', gap: 14 }}>
+            <span style={{ width: 10, height: 10, borderRadius: 5, background: theme.purple, display: 'block', flexShrink: 0 }} />
+            <div style={{ flex: 1 }}>
+              <div style={{ fontWeight: 600 }}>Resume.pdf</div>
+              <div style={{ color: theme.dim, fontSize: 13 }}>↓ download · 2 pages</div>
+            </div>
+            <span style={{ color: theme.dim }}>↓</span>
+          </a>
+        </div>
+      </div>
+    </section>
+  );
+}
+
+// ─── FOOTER ───────────────────────────────────────────────────────────────────
+
+function Footer() {
+  return (
+    <footer style={{ borderTop: `1px solid ${theme.border}`, padding: '32px' }}>
+      <div style={{ maxWidth: 1240, margin: '0 auto', display: 'flex', flexWrap: 'wrap', alignItems: 'center', gap: 16, fontSize: 12, color: theme.dim }}>
+        <span style={{ width: 7, height: 7, borderRadius: 4, background: theme.green, display: 'block' }} />
+        <span>~/aaron-johal — built by hand, in <span style={{ color: theme.cyan }}>{'<html>'}</span>, with too much coffee.</span>
+        <span style={{ marginLeft: 'auto' }}>© 2026 Aaron Johal</span>
+      </div>
+    </footer>
+  );
+}
+
+// ─── APP ──────────────────────────────────────────────────────────────────────
+
+function App() {
+  React.useEffect(() => {
+    document.body.style.background = theme.bg;
+    document.body.style.color = theme.text;
+  }, []);
+
+  const jump = (id) => {
+    const el = document.getElementById(id);
+    if (el) el.scrollIntoView({ behavior: 'smooth', block: 'start' });
+  };
+
+  return (
+    <div style={{ background: theme.bg, color: theme.text, minHeight: '100vh' }}>
+      <TopNav onJump={jump} />
+      <Hero />
+      <WorkSection />
+      <AboutSection />
+      <ProcessSection />
+      <ContactSection />
+      <Footer />
+    </div>
+  );
+}
+
+ReactDOM.createRoot(document.getElementById('root')).render(<App />);
+</script>
+</body>
+</html>
