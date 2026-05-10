@@ -330,115 +330,138 @@ function TopNav({ onJump }) {
 
   const handleNavClick = (id) => { setMenuOpen(false); onJump(id); };
 
-  return (
-    <>
-      {isMobile && menuOpen && (
-        <div onClick={() => setMenuOpen(false)}
-             style={{ position: 'fixed', inset: 0, zIndex: 40 }} />
-      )}
-      <header style={{
-        position: 'sticky', top: 0, zIndex: 50,
-        background: theme.bgDeep + 'ee',
-        backdropFilter: 'blur(12px)',
-        borderBottom: `1px solid ${theme.border}`,
+  const Logo = () => (
+    <a href="#top"
+       onClick={(e) => { e.preventDefault(); window.scrollTo({ top: 0, behavior: 'smooth' }); setMenuOpen(false); }}
+       style={{ display: 'flex', alignItems: 'center', gap: 10, textDecoration: 'none', color: theme.text }}>
+      <span style={{ display: 'flex', gap: 5 }}>
+        <span style={{ width: 11, height: 11, borderRadius: 6, background: '#ff5f56', display: 'block' }} />
+        <span style={{ width: 11, height: 11, borderRadius: 6, background: '#ffbd2e', display: 'block' }} />
+        <span style={{ width: 11, height: 11, borderRadius: 6, background: '#27c93f', display: 'block' }} />
+      </span>
+      <span style={{ fontWeight: 600, letterSpacing: '-0.01em' }}>
+        <span style={{ color: theme.dim }}>~/</span>aaron-johal
+      </span>
+    </a>
+  );
+
+  if (isMobile && menuOpen) {
+    return (
+      <div style={{
+        position: 'fixed', inset: 0, zIndex: 50,
+        background: theme.bgDeep,
+        display: 'flex', flexDirection: 'column',
       }}>
         <div style={{
-          maxWidth: 1240, margin: '0 auto',
           padding: '14px 24px',
           display: 'flex', alignItems: 'center',
           fontSize: 13,
+          borderBottom: `1px solid ${theme.border}`,
+          flexShrink: 0,
         }}>
-          <a href="#top"
-             onClick={(e) => { e.preventDefault(); window.scrollTo({ top: 0, behavior: 'smooth' }); setMenuOpen(false); }}
-             style={{ display: 'flex', alignItems: 'center', gap: 10, textDecoration: 'none', color: theme.text }}>
-            <span style={{ display: 'flex', gap: 5 }}>
-              <span style={{ width: 11, height: 11, borderRadius: 6, background: '#ff5f56', display: 'block' }} />
-              <span style={{ width: 11, height: 11, borderRadius: 6, background: '#ffbd2e', display: 'block' }} />
-              <span style={{ width: 11, height: 11, borderRadius: 6, background: '#27c93f', display: 'block' }} />
-            </span>
-            <span style={{ fontWeight: 600, letterSpacing: '-0.01em' }}>
-              <span style={{ color: theme.dim }}>~/</span>aaron-johal
-            </span>
-          </a>
-
-          {!isMobile && (
-            <>
-              <nav style={{ display: 'flex', gap: 22, marginLeft: 16, flex: 1 }}>
-                {items.map((it) => (
-                  <a key={it.id} href={`#${it.id}`}
-                     onClick={(e) => { e.preventDefault(); onJump(it.id); }}
-                     style={{ color: theme.dim, textDecoration: 'none', display: 'flex', alignItems: 'center', gap: 7 }}
-                     onMouseEnter={(e) => (e.currentTarget.style.color = theme.text)}
-                     onMouseLeave={(e) => (e.currentTarget.style.color = theme.dim)}
-                  >
-                    <span style={{ width: 6, height: 6, borderRadius: 3, background: it.c, display: 'block' }} />
-                    {it.label}
-                  </a>
-                ))}
-              </nav>
-              <a href={PORTFOLIO.links.linkedin} target="_blank" rel="noreferrer"
-                 style={{ color: theme.dim, fontSize: 12, marginLeft: 24 }}>linkedin ↗</a>
-              <a href={PORTFOLIO.links.github} target="_blank" rel="noreferrer"
-                 style={{ color: theme.dim, fontSize: 12, marginLeft: 24 }}>github ↗</a>
-            </>
-          )}
-
-          {isMobile && (
-            <button onClick={() => setMenuOpen((o) => !o)}
-              style={{
-                marginLeft: 'auto', background: 'transparent',
-                border: `1px solid ${theme.border}`, color: theme.text,
-                borderRadius: 8, padding: '7px 16px', fontSize: 13,
-                cursor: 'pointer', display: 'flex', alignItems: 'center',
-                gap: 8, fontFamily: 'inherit', letterSpacing: '0.01em',
-              }}>
-              {menuOpen ? '✕  close' : '≡  menu'}
-            </button>
-          )}
+          <Logo />
+          <button onClick={() => setMenuOpen(false)}
+            style={{
+              marginLeft: 'auto', background: 'transparent',
+              border: `1px solid ${theme.border}`, color: theme.text,
+              borderRadius: 8, padding: '7px 16px', fontSize: 13,
+              cursor: 'pointer', display: 'flex', alignItems: 'center',
+              gap: 8, fontFamily: 'inherit', letterSpacing: '0.01em',
+            }}>
+            ✕  close
+          </button>
         </div>
-
-        {isMobile && menuOpen && (
-          <div style={{ borderTop: `1px solid ${theme.border}`, padding: '20px 24px 0' }}>
-            <div style={{ fontSize: 11, color: theme.dimmer, letterSpacing: '0.12em', marginBottom: 8 }}>
-              // NAVIGATE
-            </div>
-            {items.map((it) => (
-              <a key={it.id} href={`#${it.id}`}
-                 onClick={(e) => { e.preventDefault(); handleNavClick(it.id); }}
-                 style={{
-                   display: 'flex', alignItems: 'center', gap: 14,
-                   padding: '16px 0', textDecoration: 'none',
-                   color: theme.text, fontSize: 22,
-                   borderBottom: `1px solid ${theme.border}`,
-                 }}
-              >
-                <span style={{ width: 10, height: 10, borderRadius: 5, background: it.c, display: 'block', flexShrink: 0 }} />
-                {it.label}
-                <span style={{ marginLeft: 'auto', color: theme.dimmer, fontSize: 16 }}>↗</span>
-              </a>
-            ))}
-            <div style={{ display: 'flex', gap: 12, padding: '20px 0' }}>
-              <a href={PORTFOLIO.links.linkedin} target="_blank" rel="noreferrer"
-                 style={{
-                   flex: 1, border: `1px solid ${theme.border}`, borderRadius: 8,
-                   padding: '14px', textAlign: 'center', color: theme.dim,
-                   textDecoration: 'none', fontSize: 13,
-                 }}>
-                linkedin ↗
-              </a>
-              <a href={PORTFOLIO.links.github} target="_blank" rel="noreferrer"
-                 style={{
-                   flex: 1, border: `1px solid ${theme.border}`, borderRadius: 8,
-                   padding: '14px', textAlign: 'center', color: theme.dim,
-                   textDecoration: 'none', fontSize: 13,
-                 }}>
-                github ↗
-              </a>
-            </div>
+        <div style={{ padding: '20px 24px 0', flexShrink: 0 }}>
+          <div style={{ fontSize: 11, color: theme.dimmer, letterSpacing: '0.12em', marginBottom: 8 }}>
+            // NAVIGATE
           </div>
+          {items.map((it) => (
+            <a key={it.id} href={`#${it.id}`}
+               onClick={(e) => { e.preventDefault(); handleNavClick(it.id); }}
+               style={{
+                 display: 'flex', alignItems: 'center', gap: 14,
+                 padding: '16px 0', textDecoration: 'none',
+                 color: theme.text, fontSize: 22,
+                 borderBottom: `1px solid ${theme.border}`,
+               }}
+            >
+              <span style={{ width: 10, height: 10, borderRadius: 5, background: it.c, display: 'block', flexShrink: 0 }} />
+              {it.label}
+              <span style={{ marginLeft: 'auto', color: theme.dimmer, fontSize: 16 }}>↗</span>
+            </a>
+          ))}
+          <div style={{ display: 'flex', gap: 12, padding: '20px 0' }}>
+            <a href={PORTFOLIO.links.linkedin} target="_blank" rel="noreferrer"
+               style={{
+                 flex: 1, border: `1px solid ${theme.border}`, borderRadius: 8,
+                 padding: '14px', textAlign: 'center', color: theme.dim,
+                 textDecoration: 'none', fontSize: 13,
+               }}>
+              linkedin ↗
+            </a>
+            <a href={PORTFOLIO.links.github} target="_blank" rel="noreferrer"
+               style={{
+                 flex: 1, border: `1px solid ${theme.border}`, borderRadius: 8,
+                 padding: '14px', textAlign: 'center', color: theme.dim,
+                 textDecoration: 'none', fontSize: 13,
+               }}>
+              github ↗
+            </a>
+          </div>
+        </div>
+      </div>
+    );
+  }
+
+  return (
+    <header style={{
+      position: 'sticky', top: 0, zIndex: 50,
+      background: theme.bgDeep + 'ee',
+      backdropFilter: 'blur(12px)',
+      borderBottom: `1px solid ${theme.border}`,
+    }}>
+      <div style={{
+        maxWidth: 1240, margin: '0 auto',
+        padding: '14px 24px',
+        display: 'flex', alignItems: 'center',
+        fontSize: 13,
+      }}>
+        <Logo />
+        {!isMobile && (
+          <>
+            <nav style={{ display: 'flex', gap: 22, marginLeft: 16, flex: 1 }}>
+              {items.map((it) => (
+                <a key={it.id} href={`#${it.id}`}
+                   onClick={(e) => { e.preventDefault(); onJump(it.id); }}
+                   style={{ color: theme.dim, textDecoration: 'none', display: 'flex', alignItems: 'center', gap: 7 }}
+                   onMouseEnter={(e) => (e.currentTarget.style.color = theme.text)}
+                   onMouseLeave={(e) => (e.currentTarget.style.color = theme.dim)}
+                >
+                  <span style={{ width: 6, height: 6, borderRadius: 3, background: it.c, display: 'block' }} />
+                  {it.label}
+                </a>
+              ))}
+            </nav>
+            <a href={PORTFOLIO.links.linkedin} target="_blank" rel="noreferrer"
+               style={{ color: theme.dim, fontSize: 12, marginLeft: 24 }}>linkedin ↗</a>
+            <a href={PORTFOLIO.links.github} target="_blank" rel="noreferrer"
+               style={{ color: theme.dim, fontSize: 12, marginLeft: 24 }}>github ↗</a>
+          </>
         )}
-      </header>
-    </>
+        {isMobile && (
+          <button onClick={() => setMenuOpen(true)}
+            style={{
+              marginLeft: 'auto', background: 'transparent',
+              border: `1px solid ${theme.border}`, color: theme.text,
+              borderRadius: 8, padding: '7px 16px', fontSize: 13,
+              cursor: 'pointer', display: 'flex', alignItems: 'center',
+              gap: 8, fontFamily: 'inherit', letterSpacing: '0.01em',
+            }}>
+            ≡  menu
+          </button>
+        )}
+      </div>
+    </header>
   );
 }
 
