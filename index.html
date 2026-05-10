@@ -446,7 +446,7 @@ function TopNav({ onJump }) {
 
 function Hero() {
   return (
-    <section id="top" style={{ maxWidth: 1240, margin: '0 auto', padding: '88px 32px 56px' }}>
+    <section id="top" style={{ maxWidth: 1240, margin: '0 auto', padding: 'clamp(32px, 6vw, 88px) 32px 56px' }}>
       <div style={{
         display: 'flex', alignItems: 'center', gap: 8,
         color: theme.dim, fontSize: 12, marginBottom: 28,
@@ -455,7 +455,7 @@ function Hero() {
         <span>~/aaron-johal</span>
         <span style={{ color: theme.dimmer }}>/</span>
         <span>readme.md</span>
-        <span style={{ marginLeft: 'auto', color: theme.dimmer }}>last updated · {PORTFOLIO.lastUpdated}</span>
+
       </div>
 
       <div style={{ color: theme.dim, fontSize: 14, marginBottom: 14 }}>
