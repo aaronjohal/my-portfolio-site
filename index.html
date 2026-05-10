@@ -493,18 +493,9 @@ function Hero() {
         margin: 0, color: theme.text,
       }}>
         Hi, I'm <span style={{ color: theme.green }}>Aaron</span>.<br />
-        I'm a Senior PM<br />
-        who <span style={{ color: theme.yellow }}>builds</span> the things he ships.
+        A Senior PM who <span style={{ color: theme.yellow, textDecoration: 'underline', textDecorationColor: theme.yellow }}>builds</span><br />
+        and ships AI products.
       </h1>
-
-      <p style={{
-        fontSize: 18, lineHeight: 1.55, color: theme.dim,
-        maxWidth: 620, marginTop: 24, marginBottom: 0,
-      }}>
-        {PORTFOLIO.tagline} I treat product management like an engineering discipline —
-        write the spec, ship the prototype, measure, iterate.{' '}
-        <span style={{ color: theme.text }}>The fastest way to know if a thing should exist is to build a janky version and use it.</span>
-      </p>
 
       <div style={{ marginTop: 32, display: 'flex', gap: 12, flexWrap: 'wrap' }}>
         <a href="#work"
